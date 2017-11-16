@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+# Builds the docker images for ansible and other tools.
+set -e 
+
+ROOT_DIR=$(cd $(dirname ${BASH_SOURCE})/.. && pwd)
+USER_NAME=$(id -un)
+
+function run_ansible() {
+	# Note we map just the ssh config and known_hosts, not entire .ssh dir as
+	# the mux sockets will not work in the mapped volume
+	local image_name="ppanyukov/ansible-docker/ansible/${USER_NAME}"
+	echo "Running image ${image_name}"
+	docker run \
+		--rm \
+		-it \
+		-v ${HOME}:${HOME} \
+		-v ${PWD}:${PWD} \
+		-w ${PWD} \
+		-v ~/.ssh/config:/root/.ssh/config \
+		-v ~/.ssh/config:/root/.ssh/known_hosts \
+		-e HOME=${HOME} \
+		${image_name} \
+		ansible $@
+}
+
+run_ansible $@

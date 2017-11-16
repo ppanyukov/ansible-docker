@@ -18,7 +18,7 @@ function run_ansible() {
 		-v ${PWD}:${PWD} \
 		-w ${PWD} \
 		-v ~/.ssh/config:/root/.ssh/config \
-		-v ~/.ssh/config:/root/.ssh/known_hosts \
+		-v ~/.ssh/known_hosts:/root/.ssh/known_hosts \
 		-e HOME=${HOME} \
 		${image_name} \
 		bash $@
